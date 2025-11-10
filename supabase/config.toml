@@ -1,0 +1,7 @@
+project_id = "qcihtgrnqyldqceaxiyb"
+
+[functions.analyze-resume]
+verify_jwt = true
+
+[functions.generate-roadmap]
+verify_jwt = true
