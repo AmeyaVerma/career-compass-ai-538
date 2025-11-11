@@ -102,7 +102,10 @@ const Dashboard = () => {
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-smooth cursor-pointer border-2">
+            <Card 
+              className="p-6 hover:shadow-lg transition-smooth cursor-pointer border-2"
+              onClick={() => navigate("/roadmap")}
+            >
               <div className="w-12 h-12 bg-gradient-success rounded-lg flex items-center justify-center mb-4">
                 <Target className="w-6 h-6 text-success-foreground" />
               </div>

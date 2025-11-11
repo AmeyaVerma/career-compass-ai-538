@@ -71,9 +71,15 @@ Deno.serve(async (req) => {
               
               Generate a comprehensive roadmap with 8-12 sequential steps. Each step should build on previous steps and include:
               - Clear learning objectives
-              - Estimated time to complete
-              - Key resources and learning materials
-              - Practical projects to demonstrate mastery`,
+              - Estimated time to complete (in hours)
+              - Recommended courses and resources from Coursera and Udemy
+              - Additional resources like documentation, tutorials, and practical projects
+              
+              IMPORTANT: For resources, prioritize actual Coursera and Udemy courses. Use real course names and provide proper URLs in the format:
+              - Coursera: https://www.coursera.org/learn/[course-slug]
+              - Udemy: https://www.udemy.com/course/[course-slug]
+              
+              Include a mix of resource types: courses (Coursera/Udemy), documentation, tutorials, videos, and hands-on projects.`,
             },
           ],
           tools: [

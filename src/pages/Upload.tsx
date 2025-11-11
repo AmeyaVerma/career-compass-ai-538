@@ -12,7 +12,7 @@ const Upload = () => {
   const handleUploadComplete = () => {
     toast({
       title: "Success!",
-      description: "Your resume has been analyzed successfully!",
+      description: "Your resume has been analyzed successfully! Generate a roadmap to see your learning path.",
     });
   };
 
