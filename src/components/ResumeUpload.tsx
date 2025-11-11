@@ -9,8 +9,11 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import * as pdfjsLib from "pdfjs-dist";
 
-// Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Configure PDF.js worker - use the bundled worker for reliability
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString();
 
 interface Skill {
   skill_name: string;
@@ -32,20 +35,37 @@ export const ResumeUpload = ({ onUploadComplete }: ResumeUploadProps) => {
   const { toast } = useToast();
 
   const extractTextFromPDF = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let fullText = "";
+    try {
+      console.log("Starting PDF text extraction...");
+      const arrayBuffer = await file.arrayBuffer();
+      console.log("PDF file loaded, size:", arrayBuffer.byteLength);
+      
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      console.log("PDF parsed, pages:", pdf.numPages);
+      
+      let fullText = "";
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(" ");
-      fullText += pageText + "\n";
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items
+          .map((item: any) => item.str)
+          .join(" ");
+        fullText += pageText + "\n";
+        console.log(`Extracted text from page ${i}/${pdf.numPages}`);
+      }
+
+      console.log("Total text extracted:", fullText.length, "characters");
+      
+      if (!fullText.trim()) {
+        throw new Error("No text could be extracted from the PDF. The file may be image-based or corrupted.");
+      }
+
+      return fullText;
+    } catch (error) {
+      console.error("PDF extraction error:", error);
+      throw new Error("Failed to read PDF content. Please ensure the file is a valid text-based PDF.");
     }
-
-    return fullText;
   };
 
   const handleUpload = async (file: File) => {
