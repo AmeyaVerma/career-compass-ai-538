@@ -89,7 +89,10 @@ const Dashboard = () => {
 
           {/* Quick Actions */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <Card className="p-6 hover:shadow-lg transition-smooth cursor-pointer border-2">
+            <Card 
+              className="p-6 hover:shadow-lg transition-smooth cursor-pointer border-2"
+              onClick={() => navigate("/upload")}
+            >
               <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4">
                 <Upload className="w-6 h-6 text-primary-foreground" />
               </div>
@@ -128,7 +131,10 @@ const Dashboard = () => {
               <p className="text-xl text-muted-foreground mb-6">
                 No activity yet. Upload your resume to get started!
               </p>
-              <Button className="bg-gradient-primary hover:opacity-90 transition-smooth">
+              <Button 
+                className="bg-gradient-primary hover:opacity-90 transition-smooth"
+                onClick={() => navigate("/upload")}
+              >
                 <Upload className="w-4 h-4 mr-2" />
                 Upload Resume
               </Button>
