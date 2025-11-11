@@ -12,11 +12,8 @@ const Upload = () => {
   const handleUploadComplete = () => {
     toast({
       title: "Success!",
-      description: "Your resume has been analyzed. Redirecting to dashboard...",
+      description: "Your resume has been analyzed successfully!",
     });
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 2000);
   };
 
   const handleSignOut = async () => {
