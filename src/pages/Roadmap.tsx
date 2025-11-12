@@ -72,7 +72,7 @@ const Roadmap = () => {
           roadmap_steps (*)
         `)
         .eq("user_id", userId)
-        .order("created_at", { ascending: false })
+        .order("generated_at", { ascending: false })
         .limit(1)
         .single();
 
@@ -153,7 +153,7 @@ const Roadmap = () => {
           roadmap_steps (*)
         `)
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
+        .order("generated_at", { ascending: false })
         .limit(1)
         .single();
 
