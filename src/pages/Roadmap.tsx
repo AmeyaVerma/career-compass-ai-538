@@ -78,6 +78,8 @@ const Roadmap = () => {
 
       if (error && error.code !== "PGRST116") {
         console.error("Error fetching roadmap:", error);
+        setLoading(false);
+        return;
       }
 
       if (roadmapData) {
@@ -91,16 +93,23 @@ const Roadmap = () => {
             })),
         };
         setRoadmap(formattedRoadmap);
+        setLoading(false);
+      } else {
+        // No roadmap exists, generate one automatically
+        setLoading(false);
+        await generateRoadmap();
       }
-    } finally {
+    } catch (err) {
+      console.error("Error in fetchRoadmap:", err);
       setLoading(false);
     }
   };
 
   const generateRoadmap = async () => {
-    if (!user) return;
+    if (!user || generating) return;
 
     setGenerating(true);
+    
     try {
       // Fetch user's skills
       const { data: skills, error: skillsError } = await supabase
@@ -116,6 +125,7 @@ const Roadmap = () => {
           description: "Please upload a resume first to extract your skills.",
           variant: "destructive",
         });
+        navigate("/upload");
         return;
       }
 
@@ -132,11 +142,33 @@ const Roadmap = () => {
 
       toast({
         title: "Success!",
-        description: "Your personalized learning roadmap has been generated.",
+        description: "Your personalized learning roadmap has been generated with courses from Coursera and Udemy.",
       });
 
-      // Refresh the roadmap
-      await fetchRoadmap(user.id);
+      // Refresh the roadmap - fetch without auto-generating
+      const { data: roadmapData } = await supabase
+        .from("roadmaps")
+        .select(`
+          *,
+          roadmap_steps (*)
+        `)
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (roadmapData) {
+        const formattedRoadmap: Roadmap = {
+          ...roadmapData,
+          steps: (roadmapData.roadmap_steps || [])
+            .sort((a: any, b: any) => a.step_number - b.step_number)
+            .map((step: any) => ({
+              ...step,
+              is_completed: false,
+            })),
+        };
+        setRoadmap(formattedRoadmap);
+      }
     } catch (error: any) {
       console.error("Error generating roadmap:", error);
       toast({
@@ -177,12 +209,17 @@ const Roadmap = () => {
     }
   };
 
-  if (loading) {
+  if (loading || generating) {
     return (
       <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
         <div className="text-center">
           <Brain className="w-16 h-16 text-primary mx-auto mb-4 animate-pulse" />
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-xl font-semibold text-foreground mb-2">
+            {generating ? "Generating Your Personalized Roadmap..." : "Loading..."}
+          </p>
+          <p className="text-muted-foreground">
+            {generating ? "Finding the best courses from Coursera and Udemy for you" : "Please wait"}
+          </p>
         </div>
       </div>
     );
@@ -242,28 +279,12 @@ const Roadmap = () => {
             <Card className="p-12 text-center">
               <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-foreground mb-2">
-                No Roadmap Yet
+                Generating Your Roadmap
               </h2>
               <p className="text-muted-foreground mb-6">
-                Generate a personalized learning roadmap based on your skills and career goals
+                Please wait while we create a personalized learning path based on your skills...
               </p>
-              <Button
-                onClick={generateRoadmap}
-                disabled={generating}
-                className="bg-gradient-primary hover:opacity-90 transition-smooth"
-              >
-                {generating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Target className="w-4 h-4 mr-2" />
-                    Generate Roadmap
-                  </>
-                )}
-              </Button>
+              <Loader2 className="w-8 h-8 text-primary mx-auto animate-spin" />
             </Card>
           ) : (
             <div className="space-y-6">

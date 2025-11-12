@@ -12,8 +12,13 @@ const Upload = () => {
   const handleUploadComplete = () => {
     toast({
       title: "Success!",
-      description: "Your resume has been analyzed successfully! Generate a roadmap to see your learning path.",
+      description: "Redirecting to your personalized roadmap...",
     });
+    
+    // Redirect to roadmap page after 1 second
+    setTimeout(() => {
+      navigate("/roadmap");
+    }, 1000);
   };
 
   const handleSignOut = async () => {
