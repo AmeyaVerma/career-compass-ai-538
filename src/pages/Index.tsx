@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Brain, Target, TrendingUp, Upload, BookOpen, Award } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -13,14 +12,10 @@ const Index = () => {
           <span className="text-xl font-bold text-foreground">CareerAI</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/auth">
-            <Button variant="ghost">Sign In</Button>
-          </Link>
-          <Link to="/auth">
-            <Button className="bg-gradient-primary hover:opacity-90 transition-smooth">
-              Get Started
-            </Button>
-          </Link>
+          <Button variant="ghost">Sign In</Button>
+          <Button className="bg-gradient-primary hover:opacity-90 transition-smooth">
+            Get Started
+          </Button>
         </div>
       </nav>
 
@@ -36,11 +31,9 @@ const Index = () => {
             powered by advanced AI technology.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link to="/auth">
-              <Button size="lg" className="bg-gradient-primary hover:opacity-90 transition-smooth text-lg px-8">
-                Start Your Journey
-              </Button>
-            </Link>
+            <Button size="lg" className="bg-gradient-primary hover:opacity-90 transition-smooth text-lg px-8">
+              Start Your Journey
+            </Button>
             <Button size="lg" variant="outline" className="text-lg px-8">
               Learn More
             </Button>
@@ -131,11 +124,9 @@ const Index = () => {
           <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
             Join thousands of professionals who are accelerating their growth with AI-powered guidance.
           </p>
-          <Link to="/auth">
-            <Button size="lg" variant="secondary" className="text-lg px-8 shadow-xl">
-              Get Started Free
-            </Button>
-          </Link>
+          <Button size="lg" variant="secondary" className="text-lg px-8 shadow-xl">
+            Get Started Free
+          </Button>
         </Card>
       </section>
 
